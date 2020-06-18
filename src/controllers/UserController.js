@@ -2,13 +2,36 @@
 const User = require('../database/connection');
 const bcrypt = require('bcryptjs');
 const UserUtils = require('../utils/UserUtils');
-const { reset } = require('nodemon');
 
 module.exports = {
-    async index(req, res, next){
-
+    async getOneByEmail(email){
+        return await User('users').where('email', email).first();
     },
-    
+
+    async index(req, res, next){
+        const { email, password } = req.body;
+
+        const user = await User('users')
+        .select('password')
+        .where('email', email)
+        .first();
+
+        if(!user){
+            return res.status(400).send({ error: "User not found"});
+        }
+
+        if(!await bcrypt.compare(password, user.password)){
+            return res.status(400).send({ error: "Invalid Password"});
+        }
+
+        const logUser = await User('users')
+        .select('name', 'email')
+        .where('email', email)
+        .first();
+        
+        return res.status(200).send( { logUser });
+    },
+
     async create(req, res, next){      
         //validate the user constraints
         const { name, email } = req.body; 

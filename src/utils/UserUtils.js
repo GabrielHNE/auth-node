@@ -1,9 +1,7 @@
 const User = require('../database/connection');
 
 module.exports = {
-    async getOneByEmail(email){
-        return await User('users').where('email', email).first();
-    },
+
 
     validUser(user){
         const { name, email, hasntpass } = user;
