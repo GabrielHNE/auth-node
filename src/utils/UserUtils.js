@@ -2,7 +2,6 @@ const User = require('../database/connection');
 
 module.exports = {
 
-
     validUser(user){
         const { name, email, hasntpass } = user;
 

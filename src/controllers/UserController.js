@@ -21,7 +21,10 @@ module.exports = {
         }
 
         if(!await bcrypt.compare(password, user.password)){
-            return res.status(400).send({ error: "Invalid Password"});
+            //return res.status(400).send({ error: "Invalid Password"});
+            const err = new Error("Wrong credentials");
+            err.status = 401 ;
+            next(err);
         }
 
         const logUser = await User('users')
