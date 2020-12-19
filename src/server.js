@@ -1,35 +1,40 @@
 const express = require('express');
+const path = require('path');
+
+const authMiddleware = require("./middlewares/auth");
+const notFound = require("./middlewares/404");
+
+
 
 const authRoute = require('./controllers/AuthController');
 
-const PORT = 3030;
+const PORT = 3000;
 
 const app = express();
 
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
+
+app.get('/', (req, res) => {
+    console.log("ROOT");
+    return res.sendFile(path.resolve(__dirname, '../public', 'index.html'));
+})
+
 app.use('/auth', authRoute);
 
-
-app.get('/', (req, res, next) => {
-    res.send('HI');
-});
-
-//The last middleware return a page not found
-app.use((req, res, next) => {
-   // console.log(`Requisition: \n${req}\n\n\n\n`);
-    const err = new Error("Page not Found 404");
-    err.status = 404;
-    next(err);
-});
-
-//handling errors
-app.use((err, req, res, next) => {
-    res.status(err.status || 500);
-    res.json({ error: err.message, err});
+app.get('/dashboard', authMiddleware, (req, res) => {
+    console.log("Dashboard");
+    return res.sendFile(path.resolve(__dirname, '../public', 'dashboard.html'));
 });
 
 
+// app.get('/dashboard', (req, res, next) => {
+//     console.log("Renderizou!");
+//     return res.render('dashboard.html');
+// });
+
+app.use(notFound);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT} ...`);
