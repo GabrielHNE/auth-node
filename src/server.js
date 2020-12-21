@@ -4,15 +4,13 @@ const path = require('path');
 const authMiddleware = require("./middlewares/auth");
 const notFound = require("./middlewares/404");
 
-
-
 const authRoute = require('./controllers/AuthController');
 
 const PORT = 3000;
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(express.json());
 

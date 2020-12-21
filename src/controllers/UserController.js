@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const UserUtils = require('../utils/UserUtils');
 const jwt = require("jsonwebtoken");
 const path = require('path');
+const { response } = require('express');
 
 
 module.exports = {
@@ -47,10 +48,7 @@ module.exports = {
             expiresIn: 86400
         });
         
-        console.log(`from database: ${ logUser } ${token} `);
-
-        res.status(200).sendFile(path.resolve(__dirname, '../../public', 'dashboard.html'));
-        //return res.send( { logUser, token } );
+        return res.status(200).send({ token, logUser, redirect: 'http://localhost:3000' });
     },
 
     async create(req, res, next){      
