@@ -26,12 +26,6 @@ app.get('/dashboard', authMiddleware, (req, res) => {
     return res.sendFile(path.resolve(__dirname, '../public', 'dashboard.html'));
 });
 
-
-// app.get('/dashboard', (req, res, next) => {
-//     console.log("Renderizou!");
-//     return res.render('dashboard.html');
-// });
-
 app.use(notFound);
 
 app.listen(PORT, () => {

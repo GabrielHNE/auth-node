@@ -48,7 +48,9 @@ module.exports = {
             expiresIn: 86400
         });
         
-        return res.status(200).send({ token, logUser, redirect: 'http://localhost:3000' });
+        return res
+            .status(200)
+            .send({ token, logUser, redirect: 'http://localhost:3000' });
     },
 
     async create(req, res, next){      

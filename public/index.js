@@ -1,30 +1,37 @@
 var xhr = new XMLHttpRequest();
 
-let token = '';
+let Token = '';
 
 let submitButton = document.getElementById("submit");
 
+
+window.addEventListener('popstate', (event) => {
+    console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+});
+
 submitButton.addEventListener("click", (event) => {
     event.preventDefault();
-    console.log("wtf");
+    
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     login(email, password);
 });
 
-function login(email, password){
+async function login(email, password){
     
-    postData("http://localhost:3000/auth/authentication", { email, password })
-    .then(res => {
-        token = res.token;
-        console.log(token);
-    })
-    .catch(e => console.log(`Erro: ${e}`));
+    Token = await postData("http://localhost:3000/auth/authentication", { email, password });
 
-    getData('http://localhost:3000/dashboard', {au: 'au'})
-        .then(res => console.log(res));
+    res = await getData("http://localhost:3000/dashboard");
+
+    if(res){
+        history.pushState(Token, 'Dashboard', 'dashboard.html');
+        console.log('hehehe');
+    }
 }
+
+// getData('http://localhost:3000/dashboard', {au: 'au'})
+//         .then(res => console.log(res));
 
 async function postData(url = '', data = {}){
 
@@ -50,9 +57,9 @@ async function getData(url = '', headers){
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
         credentials: 'same-origin', // include, *same-origin, omit
         headers:{
-            'Authorization': token
+            'Authorization': 'Bearear ' + Token.token
         },
-        redirect: 'follow', // manual, *follow, error
+        redirect: 'follow'
     });
 
     return response;

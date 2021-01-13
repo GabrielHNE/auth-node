@@ -3,9 +3,11 @@ const { promisify } = require("util");
 
 module.exports = async (req, res, next) => {
   
-  const authHeader = req.headers.Authorization;
+  const authHeader = req.get('Authorization');
 
-  console.log(authHeader);
+  console.log('Inside auth: ' + authHeader);
+  console.log('Inside auth: ' + req.headers.Host);
+
 
   if (!authHeader) {
     return res.status(401).send({ error: "No token provided" });
@@ -13,6 +15,7 @@ module.exports = async (req, res, next) => {
 
   const [scheme, token] = authHeader.split(" ");
 
+  console.log('trying');
   try {
     const decoded = await promisify(jwt.verify)(token, "secret");
 
