@@ -5,6 +5,7 @@ const authMiddleware = require("./middlewares/auth");
 const notFound = require("./middlewares/404");
 
 const authRoute = require('./controllers/AuthController');
+const userController = require('./controllers/UserController');
 
 const PORT = 3000;
 
@@ -14,16 +15,19 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    console.log("ROOT");
-    return res.sendFile(path.resolve(__dirname, '../public', 'index.html'));
-})
+// app.get('/', (req, res) => {
+//     return res.sendFile(path.resolve(__dirname, '../public', 'index.html'));
+// });
 
-app.use('/auth', authRoute);
+// app.use('/auth', authRoute);
+
+app
+    .get('/users', userController.show )
+    .post()
+    .del()
 
 app.get('/dashboard', authMiddleware, (req, res) => {
-    console.log("Dashboard");
-    return res.sendFile(path.resolve(__dirname, '../public', 'dashboard.html'));
+    return res.send('dashboard');
 });
 
 app.use(notFound);

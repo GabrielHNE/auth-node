@@ -7,18 +7,18 @@ class Usuario {
         this.id = usuario.id;
         this.name = usuario.name;
         this.email  = usuario.email;
-        this.hash = usuario.hash;
+        this.hash = usuario.password;
 
         //validUserValues();
     }
 
-    async addUser(){
+    async create(){
         if(! await Usuario.getByEmail(this.email)){
             throw new Error('User already exists');
         }
 
         try{
-            await knex('users').insert({ 
+            return await knex('users').insert({ 
                 name: this.name,
                 email: this.email,
                 password: this.hash
@@ -28,7 +28,7 @@ class Usuario {
         }
     }
 
-    async addPasswor(password){
+    async addPassword(password){
         //functions that check if password is correct
 
         this.hash = await Usuario.generateHash(password);
@@ -62,3 +62,5 @@ class Usuario {
         return await bcrypt.hash(password, 12);
     }
 }
+
+module.exports = Usuario;
